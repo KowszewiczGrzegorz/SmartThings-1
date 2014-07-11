@@ -34,8 +34,7 @@ def updated() {
 
 def initialize() {
 	checkUV()
-	schedule("0 */15 * * * ?", "checkUV")
-    
+	schedule("0 */30 * * * ?", "checkUV")
 }
 
 def getUv() {
