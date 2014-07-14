@@ -66,8 +66,8 @@ def checkUV() {
 	        state.risk = risk
 	        
 	    }
+	state.lastUv = uv
     } 
     
-    state.lastUv = uv
     state.lastRun = new Date().toSystemFormat()
 }
