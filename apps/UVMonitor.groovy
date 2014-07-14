@@ -44,28 +44,30 @@ def getUv() {
 def checkUV() {
 	def uv = getUv()
     log.debug "checkUv: $uv"
+    if (uv && uv > 0) {
+    	if (state.lastUv != uv) {
+	        def risk
+	        if (uv >= 11) {
+	            risk = "Extreame"
+	        } else if (uv >= 8) {
+	        	risk = "Very high"
+	        } else if (uv >= 6) {
+	        	risk = "High"
+	        }
+	        
+	        if (uv > 5) {
+	        	sendPush("UV is $uv. " + risk + " risk of UV exposure.")
+	        } else {
+	        	if (state.risk) {
+	            	sendPush("UV is $uv or lower.")
+	            }
+	        }
+	        
+	        state.risk = risk
+	        
+	    }
+    } 
     
-    if (state.lastUv != uv) {
-        def risk
-        if (uv >= 11) {
-            risk = "Extreame"
-        } else if (uv >= 8) {
-        	risk = "Very high"
-        } else if (uv >= 6) {
-        	risk = "High"
-        }
-        
-        if (uv > 5) {
-        	sendPush("UV is $uv. " + risk + " risk of UV exposure.")
-        } else {
-        	if (state.risk) {
-            	sendPush("UV is $uv or lower.")
-            }
-        }
-        
-        state.risk = risk
-        
-    }
     state.lastUv = uv
     state.lastRun = new Date().toSystemFormat()
 }
