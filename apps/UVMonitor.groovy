@@ -14,23 +14,23 @@
  *
  */
 definition(
-    name: "UV Monitor",
+    name: "UV Monitor (Standalone)",
     namespace: "625alex",
     author: "Alex Malikov",
-    description: "Notify when UV index rises to dangerous levels above 5.",
+    description: "Notify when UV index rises to dangerous levels.",
     category: "Health & Wellness",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/SafetyAndSecurity/App-MindYourHome.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/SafetyAndSecurity/App-MindYourHome@2x.png")
 
 preferences {
 	section("Check how often (minutes)?") {
-		input name: "frequency", title: "Frequency", type: "number", defaultValue: 15
+		input name: "frequency", title: "Frequency", type: "number", defaultValue: 15, required: true
 	}
     section ("Only report when UV is above...") {
-    	input name: "reportMinimum", type: "number", defaultValue: 5
+    	input name: "reportMinimum", type: "number", defaultValue: 5, required: true
     }
     section ("Only report when UV changes by...") {
-    	input name: "delta", type: "number", defaultValue: 1
+    	input name: "delta", type: "number", defaultValue: 1, required: true
     }
 }
 
@@ -52,56 +52,67 @@ def initialize() {
 def getUv() {
 	def cond = getWeatherFeature("conditions")?.current_observation
 	def uv = cond?.UV as Integer
-    uv = uv ?: 0
-    if (uv < 0) uv = 0
+    uv = Math.max(uv ?: 0, 0)
+    state.uv = uv
     
-    def tf = new java.text.SimpleDateFormat("h:mm a")
-    log.debug "TZ offcet: ${cond?.local_tz_offset}"
-    tf.setTimeZone(TimeZone.getTimeZone("GMT${cond?.local_tz_offset ?: 0}"))
-    def lastRun = "${tf.format(new Date())}"
+    getTS(cond)
     
-    state.lastRun = lastRun
-    
-    log.debug "uv: $uv"
     uv
 }
 
 def checkUV() {
 	def uv = getUv()
+    def d = Math.abs((state.lastUv ?: 0) - uv)
     
-    if (state.lastUv != uv) {
-        def risk
-        if (uv >= 11) {
-            risk = "Extreme"
-        } else if (uv >= 8) {
-        	risk = "Very high"
-        } else if (uv >= 6) {
-        	risk = "High"
-        } else if (uv >= 3) {
-        	risk = "Moderate"
-        } else if (uv >= 1) {
-        	risk = "Low"
-        } else {
-        	risk = "No"
-        }
-        
+    log.debug "uv = $uv, d = $d, state = $state"
+    
+    if (uv >= reportMinimum && d >= delta) {
+    	def risk = getRisk(uv)
         state.risk = risk
         
-        if (uv >= reportMinimum) {
-        	if (Math.abs(state.lastUv ?: 0 - uv) >= delta) {
-            	def message = "UV index at ${location.name} is $uv. " + risk + " risk of UV exposure."
-            	sendPush(message)
-            	log.debug message
-                state.isLowReported = false
-            }
-        } else if (!state.isLowReported) {
-            sendPush("UV is $uv or lower.")
-            state.isLowReported = true
-        }
+        def message = "UV index at $location.name is $uv. $risk risk of UV exposure."
+        sendPush(message)
+        log.debug message
         
+        state.isLowReported = false
+        state.lastUv = uv
+                
+    } else if (!state.isLowReported && uv < reportMinimum) {
+    	def message = uv ? "UV is $uv or lower." : "UV is $uv."
+        
+    	sendPush(message)
+        state.isLowReported = true
+        state.lastUv = uv
     }
     
-    state.lastUv = uv
-    
     runIn(frequency * 60, checkUV, [overwrite: false])
+}
+
+def getRisk(def uv) {
+	def risk
+	if (uv >= 11) {
+        risk = "Extreme"
+    } else if (uv >= 8) {
+        risk = "Very high"
+    } else if (uv >= 6) {
+        risk = "High"
+    } else if (uv >= 3) {
+        risk = "Moderate"
+    } else if (uv >= 1) {
+        risk = "Low"
+    } else {
+        risk = "No"
+    }
+	
+    risk
+}
+
+def getTS(def cond) {
+	def tf = new java.text.SimpleDateFormat("h:mm a")
+    log.debug "TZ offset: ${cond?.local_tz_offset}"
+    tf.setTimeZone(TimeZone.getTimeZone("GMT${cond?.local_tz_offset ?: 0}"))
+    def lastRun = "${tf.format(new Date())}"
+    
+    state.lastRun = lastRun
+    lastRun
 }
