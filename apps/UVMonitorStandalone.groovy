@@ -30,7 +30,7 @@ preferences {
     	input name: "reportMinimum", type: "number", defaultValue: 5, required: true
     }
     section ("Only report when UV changes by...") {
-    	input name: "delta", type: "number", defaultValue: 1, required: true
+    	input name: "delta", type: "number", defaultValue: 2, required: true
     }
 }
 
@@ -54,14 +54,11 @@ def getUv() {
 	def uv = cond?.UV as Integer
     uv = Math.max(uv ?: 0, 0)
     state.uv = uv
-    
-    getTS(cond)
-    
     uv
 }
 
 def checkUV() {
-	def uv = getUv()
+    def uv = getUv()
     def d = Math.abs((state.lastUv ?: 0) - uv)
     
     log.debug "uv = $uv, d = $d, state = $state"
@@ -78,9 +75,7 @@ def checkUV() {
         state.lastUv = uv
                 
     } else if (!state.isLowReported && uv < reportMinimum) {
-    	def message = uv ? "UV is $uv or lower." : "UV is $uv."
-        
-    	sendPush(message)
+    	sendPush("UV is $uv.")
         state.isLowReported = true
         state.lastUv = uv
     }
@@ -105,14 +100,4 @@ def getRisk(def uv) {
     }
 	
     risk
-}
-
-def getTS(def cond) {
-	def tf = new java.text.SimpleDateFormat("h:mm a")
-    log.debug "TZ offset: ${cond?.local_tz_offset}"
-    tf.setTimeZone(TimeZone.getTimeZone("GMT${cond?.local_tz_offset ?: 0}"))
-    def lastRun = "${tf.format(new Date())}"
-    
-    state.lastRun = lastRun
-    lastRun
 }
