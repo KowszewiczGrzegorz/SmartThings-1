@@ -26,10 +26,10 @@ preferences {
 	section("Check how often (minutes)?") {
 		input name: "frequency", title: "Frequency", type: "number", defaultValue: 15, required: true
 	}
-    section ("Only report when UV is above...") {
+    section ("Only report when UV index is above...") {
     	input name: "reportMinimum", type: "number", defaultValue: 5, required: true
     }
-    section ("Only report when UV changes by...") {
+    section ("Only report when UV index changes by...") {
     	input name: "delta", type: "number", defaultValue: 2, required: true
     }
 }
