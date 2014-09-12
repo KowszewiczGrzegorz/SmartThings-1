@@ -1,5 +1,5 @@
 /**
- *  Web Control Panel
+ *  Web Dushboard
  *
  *  Copyright 2014 Alex Malikov
  *
@@ -14,7 +14,7 @@
  *
  */
 definition(
-    name: "Web Control Panel",
+    name: "Web Dushboard",
     namespace: "625alex",
     author: "Alex Malikov",
     description: "Web UI",
