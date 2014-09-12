@@ -71,7 +71,12 @@ def initialize() {
 	if (!state.accessToken) {
     	createAccessToken()
     }
-    def url = "https://graph.api.smartthings.com/api/smartapps/installations/${app.id}/ui?access_token=${state.accessToken}"
+    subscribe(app, getURL)
+    getURL(null)
+}
+
+def getURL(e) {
+	def url = "https://graph.api.smartthings.com/api/smartapps/installations/${app.id}/ui?access_token=${state.accessToken}"
     log.debug "app url: $url"
 }
 
