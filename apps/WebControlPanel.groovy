@@ -42,7 +42,7 @@ mappings {
 			GET: "list",
 		]
 	}
-    path("/html") {
+    path("/ui") {
 		action: [
 			GET: "html",
 		]
@@ -71,7 +71,7 @@ def initialize() {
 	if (!state.accessToken) {
     	createAccessToken()
     }
-    def url = "https://graph.api.smartthings.com/api/smartapps/installations/${app.id}/index?access_token=${state.accessToken}"
+    def url = "https://graph.api.smartthings.com/api/smartapps/installations/${app.id}/ui?access_token=${state.accessToken}"
     log.debug "app url: $url"
 }
 
