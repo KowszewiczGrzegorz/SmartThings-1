@@ -17,7 +17,7 @@ definition(
     name: "Web Dushboard",
     namespace: "625alex",
     author: "Alex Malikov",
-    description: "Web UI",
+    description: "Web Dushboard",
     category: "My Apps",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
@@ -191,6 +191,12 @@ def head() {
         function spin(id) {
         	\$("#" + id + "_icon").addClass("fa-spin");
         }
+        
+        function refreshMyself() {
+        	setTimeout(function() {spin("refresh"); refresh(); }, 1000 * 60 * 2);
+        }
+        
+        refreshMyself();
      </script>
     """
 }
