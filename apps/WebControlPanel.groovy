@@ -1,5 +1,5 @@
 /**
- *  Web Dushboard
+ *  Web Dashboard
  *
  *  Copyright 2014 Alex Malikov
  *
@@ -14,10 +14,10 @@
  *
  */
 definition(
-    name: "Web Dushboard",
+    name: "Web Dashboard",
     namespace: "625alex",
     author: "Alex Malikov",
-    description: "Web Dushboard",
+    description: "Web Dashboard",
     category: "My Apps",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
