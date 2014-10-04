@@ -927,13 +927,13 @@ def renderContact(device) {
 }
 
 def renderDevice(device) {
-    if (!device) return
+    if (!device) return ""
     if (device.type == "dimmer") return renderDimmer(device)
     if (device.type == "switch") return renderSwitch(device)
     if (device.type == "lock") return renderLock(device)
     if (device.type == "presence") return renderPresence(device)
     if (device.type == "contact") return renderContact(device)
     if (device.type == "temperature") return renderTemperature(device)
-    else return device
+    else return ""
     
 }
