@@ -1,5 +1,5 @@
 /**
- *  Web Dushboard
+ *  Web Dashboard 2
  *
  *  Copyright 2014 Alex Malikov
  *
