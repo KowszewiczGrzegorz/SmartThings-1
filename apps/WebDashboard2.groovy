@@ -927,7 +927,8 @@ def renderContact(device) {
 }
 
 def renderDevice(device) {
-	if (device.type == "dimmer") return renderDimmer(device)
+    if (!device) return
+    if (device.type == "dimmer") return renderDimmer(device)
     if (device.type == "switch") return renderSwitch(device)
     if (device.type == "lock") return renderLock(device)
     if (device.type == "presence") return renderPresence(device)
