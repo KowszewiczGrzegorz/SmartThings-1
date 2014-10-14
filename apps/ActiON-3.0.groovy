@@ -277,8 +277,8 @@ def data() {
         contacts: contacts?.collect{[type: "contact", id: it.id, name: it.displayName, status: it.currentValue('contact')]}?.sort{it.name},
         presence: presence?.collect{[type: "presence", id: it.id, name: it.displayName, status: it.currentValue('presence')]}?.sort{it.name},
         motion: motion?.collect{[type: "motion", id: it.id, name: it.displayName, status: it.currentValue('motion')]}?.sort{it.name},
-        temperature: temperature?.collect{[type: "temperature", id: it.id, name: it.displayName, status: it.currentValue('temperature')]}?.sort{it.name},
-        humidity: humidity?.collect{[type: "humidity", id: it.id, name: it.displayName, status: it.currentValue('humidity')]}?.sort{it.name},
+        temperature: temperature?.collect{[type: "temperature", id: it.id, name: it.displayName, status: Math.round(it.currentValue('temperature'))]}?.sort{it.name},
+        humidity: humidity?.collect{[type: "humidity", id: it.id, name: it.displayName, status: Math.round(it.currentValue('humidity'))]}?.sort{it.name},
     ]
 }
 
