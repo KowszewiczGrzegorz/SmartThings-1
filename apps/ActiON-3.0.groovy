@@ -1,5 +1,11 @@
 /**
- *  Web Dashboard 3
+* ActiON, formerly Web Dashboard 3
+*
+* Installation Instructions
+* - Open the logs first
+* - Install app as usual via mobile device.
+* - Don't forget to enable Oath in the SmartApp setup!
+* - Check the logs to see your URL or tap app icon in Mobile App to print the URL to the logs again.
  *
  *  Copyright 2014 Alex Malikov
  *
