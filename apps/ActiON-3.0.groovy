@@ -1,11 +1,5 @@
 /**
- *  ActiON, formerly Web Dashboard 3
- * 
- * Installation Instructions
- * - Open the logs first
- * - Install app as usual via mobile device.
- * - Don't forget to enable Oath in the SmartApp setup!
- * - Check the logs to see your URL or tap app icon in Mobile App to print the URL to the logs again.
+ *  Web Dashboard 3
  *
  *  Copyright 2014 Alex Malikov
  *
@@ -283,17 +277,20 @@ def data() {
         contacts: contacts?.collect{[type: "contact", id: it.id, name: it.displayName, status: it.currentValue('contact')]}?.sort{it.name},
         presence: presence?.collect{[type: "presence", id: it.id, name: it.displayName, status: it.currentValue('presence')]}?.sort{it.name},
         motion: motion?.collect{[type: "motion", id: it.id, name: it.displayName, status: it.currentValue('motion')]}?.sort{it.name},
-        temperature: temperature?.collect{[type: "temperature", id: it.id, name: it.displayName, status: roundNumber(it.currentValue('temperature'))]}?.sort{it.name},
-        humidity: humidity?.collect{[type: "humidity", id: it.id, name: it.displayName, status: roundNumber(it.currentValue('humidity'))]}?.sort{it.name},
+        temperature: temperature?.collect{[type: "temperature", id: it.id, name: it.displayName, status: roundNumber(it.currentValue('temperature'), "°")]}?.sort{it.name},
+        humidity: humidity?.collect{[type: "humidity", id: it.id, name: it.displayName, status: roundNumber(it.currentValue('humidity'), "%")]}?.sort{it.name},
     ]
 }
 
-def roundNumber(number) {
-	if (number == null || number == "") return "n/a"
-	try {
-    	return Math.round(number)
-    } catch (e) {
-    	return number
+def roundNumber(num, unit) {
+	if (num == null || num == "") return "n/a"
+	if (!"$num".isNumber()) return num
+	else {
+    	try {
+            return Math.round("$num".toDouble()) + (unit ?: "")
+        } catch (e) {
+        	return num
+        }
     }
 }
 
@@ -1121,7 +1118,7 @@ def renderTemperature(device) {
         	$device.name
         </div>
         <div class="st-icon">
-        	$device.status°
+        	$device.status
         </div>
         <div class="footer"><i class="wi wi-thermometer"></i></div>
 	</div>
@@ -1137,7 +1134,7 @@ def renderHumidity(device) {
         	$device.name
         </div>
         <div class="st-icon">
-        	$device.status%
+        	$device.status
         </div>
         <div class="footer"><i class="wi wi-sprinkles"></i></div>
 	</div>
@@ -1235,8 +1232,6 @@ def renderContact(device) {
 
 
 def renderWeather() {
-	log.debug "weather $weather"
-
 	if (!weather) return ""
     
     def allWeatherTiles = ""
@@ -1321,7 +1316,7 @@ def renderMotion(device) {
         <div class="st-icon">
         	<i class="fa fa-square-o"></i>
         </div>
-        ${device.state == "active" ? """<div class="st-icon st-animate-motion"><i class="fa fa-user" style="font-size:1em;"></i></div>""" : ""}
+        ${device.status == "active" ? """<div class="st-icon st-animate-motion"><i class="fa fa-user" style="font-size:1em;"></i></div>""" : ""}
 	</div>
 </div>
 """
