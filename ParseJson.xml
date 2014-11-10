@@ -1,0 +1,33 @@
+<TaskerData sr="" dvi="1" tv="4.5u1m">
+<Task sr="task14">
+<cdate>1408387389311</cdate>
+<edate>1415582508434</edate>
+<id>14</id>
+<nme>Parse Json</nme>
+<pri>10</pri>
+<Action sr="act0" ve="7">
+<code>590</code>
+<Str sr="arg0" ve="3">%CLIP</Str>
+<Str sr="arg1" ve="3">SmartThings Home State:</Str>
+<Int sr="arg2" val="0"/>
+</Action>
+<Action sr="act1" ve="7">
+<code>129</code>
+<Str sr="arg0" ve="3">var map = "["+ global("CLIP2").substring(1) +"]";
+
+var v;
+v = JSON.parse(map)[0];
+
+for (i in v) {setGlobal("ST" + i, v[i]); }</Str>
+<Str sr="arg1" ve="3"/>
+<Int sr="arg2" val="1"/>
+<Int sr="arg3" val="45"/>
+</Action>
+<Action sr="act2" ve="7">
+<code>548</code>
+<on>false</on>
+<Str sr="arg0" ve="3">%updated</Str>
+<Int sr="arg1" val="0"/>
+</Action>
+</Task>
+</TaskerData>
